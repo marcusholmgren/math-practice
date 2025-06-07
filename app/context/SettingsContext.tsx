@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, ReactNode } from 'react';
+import { createContext, useState, useContext } from 'react';
 
 // Define the shape of the context data
 interface SettingsContextType {
@@ -9,13 +9,8 @@ interface SettingsContextType {
 // Create the context with a default value
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
 
-// Define the props for the provider component
-interface SettingsProviderProps {
-  children: ReactNode;
-}
-
 // Create the provider component
-export const SettingsProvider: React.FC<SettingsProviderProps> = ({ children }) => {
+export const SettingsProvider = ({ children }: { children: any }) => {
   const [difficulty, setDifficulty] = useState<string>('medium'); // Default difficulty
 
   return (
