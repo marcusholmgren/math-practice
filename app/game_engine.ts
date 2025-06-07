@@ -9,19 +9,19 @@ function generateRandomNumber(min: number, max: number): number {
 }
 
 // Helper to generate a non-zero divisor and a dividend that's a multiple of it
-function generateDivisionNumbers(level: string): { num1: number; num2: number } {
+function generateDivisionNumbers(difficulty: string): { num1: number; num2: number } {
   let num1: number, num2: number;
-  if (level === "1") {
-    num2 = generateRandomNumber(1, 9); // Divisor 1-9
-    num1 = num2 * generateRandomNumber(0, Math.floor(9 / num2)); // Ensure num1 is multiple and within 0-9 range
-  } else { // Level "2"
-    num2 = generateRandomNumber(1, 9); // Divisor 1-9 for simplicity for now
-    num1 = num2 * generateRandomNumber(0, Math.floor(99 / num2)); // Ensure num1 is multiple and within 0-99 range
+  if (difficulty === "easy") {
+    num2 = generateRandomNumber(1, 9);
+    num1 = num2 * generateRandomNumber(0, Math.floor(9 / num2));
+  } else { // Covers 'medium', 'hard'
+    num2 = generateRandomNumber(1, 9);
+    num1 = num2 * generateRandomNumber(0, Math.floor(99 / num2));
   }
   return { num1, num2 };
 }
 
-export function generateProblem(level: string, operationType: string): Problem {
+export function generateProblem(difficulty: string, operationType: string): Problem {
   let num1: number;
   let num2: number;
   let operationSymbol: string;
@@ -29,30 +29,30 @@ export function generateProblem(level: string, operationType: string): Problem {
   switch (operationType.toLowerCase()) {
     case 'addition':
       operationSymbol = '+';
-      if (level === "1") {
+      if (difficulty === "easy") {
         num1 = generateRandomNumber(0, 9);
         num2 = generateRandomNumber(0, 9);
-      } else { // Level "2"
+      } else { // Covers 'medium', 'hard'
         num1 = generateRandomNumber(10, 99);
         num2 = generateRandomNumber(10, 99);
       }
       break;
     case 'subtraction':
       operationSymbol = '-';
-      if (level === "1") {
+      if (difficulty === "easy") {
         num1 = generateRandomNumber(0, 9);
         num2 = generateRandomNumber(0, num1); // Ensures num2 <= num1
-      } else { // Level "2"
+      } else { // Covers 'medium', 'hard'
         num1 = generateRandomNumber(10, 99);
         num2 = generateRandomNumber(10, num1); // Ensures num2 <= num1
       }
       break;
     case 'multiplication':
       operationSymbol = '*';
-      if (level === "1") {
+      if (difficulty === "easy") {
         num1 = generateRandomNumber(0, 9);
         num2 = generateRandomNumber(0, 9);
-      } else { // Level "2"
+      } else { // Covers 'medium', 'hard'
         // Adjust range to keep products from getting too large for options generation
         num1 = generateRandomNumber(0, 20);
         num2 = generateRandomNumber(0, 20);
@@ -67,7 +67,7 @@ export function generateProblem(level: string, operationType: string): Problem {
       break;
     case 'division':
       operationSymbol = '/';
-      const divisionNums = generateDivisionNumbers(level);
+      const divisionNums = generateDivisionNumbers(difficulty);
       num1 = divisionNums.num1;
       num2 = divisionNums.num2;
       break;

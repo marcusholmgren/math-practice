@@ -1,15 +1,24 @@
 import type { Route } from "./+types/home";
 import { NavLink } from "react-router";
+import { useState } from 'react';
+import { SettingsModal } from '../components/SettingsModal';
+import { useSettings } from '../context/SettingsContext';
 
 export function clientLoader() {
   return { name: "React Router" };
 }
 
 function HomePage({ loaderData }: Route.ComponentProps) {
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+  const { difficulty } = useSettings();
+
+  const toggleSettingsModal = () => {
+    setIsSettingsModalOpen(!isSettingsModalOpen);
+  };
+
   const startPractice = (mode: string) => {
-    console.log(`Starting practice mode: ${mode}`);
-    // Navigation logic will be implemented later
-    // For now, you can use <a href="/quiz"> or similar for basic navigation
+    console.log(`Starting practice mode: ${mode} with difficulty: ${difficulty}`);
+    // Navigation logic will be handled by NavLink
   };
 
   return (
@@ -25,7 +34,11 @@ function HomePage({ loaderData }: Route.ComponentProps) {
             Math Practice
           </h2>
           <div className="flex w-12 items-center justify-end">
-            <button className="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 bg-transparent text-[#111418] gap-2 text-base font-bold leading-normal tracking-[0.015em] min-w-0 p-0">
+            <button
+              onClick={toggleSettingsModal}
+              className="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 bg-transparent text-[#111418] gap-2 text-base font-bold leading-normal tracking-[0.015em] min-w-0 p-0"
+              aria-label="Open settings"
+            >
               <div
                 className="text-[#111418]"
                 data-icon="Gear"
@@ -53,7 +66,7 @@ function HomePage({ loaderData }: Route.ComponentProps) {
         <div className="flex justify-center">
           <div className="flex flex-1 gap-3 max-w-[480px] flex-col items-stretch px-4 py-3">
             <NavLink
-              to="/quiz/addition"
+              to={`/quiz/addition?difficulty=${difficulty}`}
               onClick={() => startPractice("addition")}
               className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-[#0c7ff2] text-white text-base font-bold leading-normal tracking-[0.015em] w-full"
               viewTransition
@@ -61,7 +74,7 @@ function HomePage({ loaderData }: Route.ComponentProps) {
               <span className="truncate">Addition</span>
             </NavLink>
             <NavLink
-              to="/quiz/subtraction"
+              to={`/quiz/subtraction?difficulty=${difficulty}`}
               onClick={() => startPractice("subtraction")}
               className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-[#0c7ff2] text-white text-base font-bold leading-normal tracking-[0.015em] w-full"
               viewTransition
@@ -69,7 +82,7 @@ function HomePage({ loaderData }: Route.ComponentProps) {
               <span className="truncate">Subtraction</span>
             </NavLink>
             <NavLink
-              to="/quiz/multiplication"
+              to={`/quiz/multiplication?difficulty=${difficulty}`}
               onClick={() => startPractice("multiplication")}
               className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-[#0c7ff2] text-white text-base font-bold leading-normal tracking-[0.015em] w-full"
               viewTransition
@@ -77,7 +90,7 @@ function HomePage({ loaderData }: Route.ComponentProps) {
               <span className="truncate">Multiplication</span>
             </NavLink>
             <NavLink
-              to="/quiz/division"
+              to={`/quiz/division?difficulty=${difficulty}`}
               onClick={() => startPractice("division")}
               className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-[#0c7ff2] text-white text-base font-bold leading-normal tracking-[0.015em] w-full"
               viewTransition
@@ -88,6 +101,7 @@ function HomePage({ loaderData }: Route.ComponentProps) {
         </div>
         <div className="h-5 bg-white"></div>
       </div>
+      <SettingsModal isOpen={isSettingsModalOpen} onClose={toggleSettingsModal} />
     </div>
   );
 }
