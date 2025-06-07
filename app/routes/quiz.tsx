@@ -8,14 +8,17 @@ export interface QuizLoaderArgs extends Route.LoaderArgs {
 }
 
 export async function clientLoader({ params }: QuizLoaderArgs) {
-  const mode = params.mode || "1-addition"; // Default to level 1 addition
-  const [level, operationType] = mode.split('-');
+  const operationType = params.mode || "addition"; // Default to level 1 addition
+  //const [level, operationType] = mode.split('-');
+  const level = "1";
 
   if (!level || !operationType) {
     // Handle invalid mode format, perhaps throw an error or default
-    console.error("Invalid mode format. Expected 'level-operationType'. Defaulting...");
-    const problem = generateProblem("1", "addition");
-    return { problem, level: "1", operationType: "addition" };
+    console.error(
+      "Invalid mode format. Expected 'level-operationType'. Defaulting..."
+    );
+    const problem = generateProblem("1", operationType);
+    return { problem, level: "1", operationType: operationType };
   }
 
   const problem = generateProblem(level, operationType);
@@ -36,7 +39,9 @@ function QuizPage({ loaderData }: QuizComponentProps) {
   // but loaderData should provide what we need (level, operationType)
   // const { mode: routeMode } = useParams<{ mode: string }>();
 
-  const [currentProblem, setCurrentProblem] = useState<Problem>(loaderData.problem);
+  const [currentProblem, setCurrentProblem] = useState<Problem>(
+    loaderData.problem
+  );
   const [selectedAnswer, setSelectedAnswer] = useState<string>("");
   const [attemptsRemaining, setAttemptsRemaining] = useState(2);
   const [questionNumber, setQuestionNumber] = useState(1);
@@ -75,8 +80,11 @@ function QuizPage({ loaderData }: QuizComponentProps) {
       }
     } else {
       setAttemptsRemaining(attemptsRemaining - 1);
-      if (attemptsRemaining - 1 < 0) { // Check if attempts will be less than 0
-        alert(`Out of attempts! The correct answer was: ${currentProblem.correctAnswer}`);
+      if (attemptsRemaining - 1 < 0) {
+        // Check if attempts will be less than 0
+        alert(
+          `Out of attempts! The correct answer was: ${currentProblem.correctAnswer}`
+        );
         navigate("/summary");
       } else {
         alert("Incorrect answer. Try again!");
@@ -114,7 +122,7 @@ function QuizPage({ loaderData }: QuizComponentProps) {
               <path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path>
             </svg>
           </button>
-          <h2 className="text-[#111418] text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center pr-12">
+          <h2 className="text-[#111418] text-lg font-bold capitalize leading-tight tracking-[-0.015em] flex-1 text-center pr-12">
             Math Quiz - Level {level} ({operationType})
           </h2>
         </div>
