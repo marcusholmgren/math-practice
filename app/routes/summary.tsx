@@ -1,7 +1,24 @@
 import { useNavigate } from "react-router";
+import { useSearchParams } from "react-router-dom";
+import ReactConfetti from "react-confetti";
+import { useWindowSize } from "use-window-size";
+import { useState, useEffect } from "react";
 
 function SummaryPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const score = searchParams.get("score") || "0";
+  const total = searchParams.get("total") || "0";
+  const { width, height } = useWindowSize();
+  const [showConfetti, setShowConfetti] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowConfetti(false);
+    }, 5000); // Stop confetti after 5 seconds
+    return () => clearTimeout(timer);
+  }, []);
+
   const handleCloseSummary = () => {
     console.log("Closing summary");
     // For now, navigate to home or another appropriate page
@@ -23,6 +40,11 @@ function SummaryPage() {
         fontFamily: '"Space Grotesk", "Noto Sans", sans-serif',
       }}
     >
+      <ReactConfetti
+        width={width}
+        height={height}
+        numberOfPieces={showConfetti ? 200 : 0}
+      />
       <div>
         <div className="flex items-center bg-white p-4 pb-2 justify-between">
           <button
@@ -45,7 +67,7 @@ function SummaryPage() {
           </h2>
         </div>
         <h2 className="text-[#111418] tracking-light text-[28px] font-bold leading-tight px-4 text-center pb-3 pt-5">
-          You got 8 out of 10 correct {/* This will be dynamic later */}
+          You got {score} out of {total} correct
         </h2>
         <p className="text-[#111418] text-base font-normal leading-normal pb-3 pt-1 px-4 text-center">
           You're doing great! Keep practicing to improve your math skills.

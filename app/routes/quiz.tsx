@@ -46,6 +46,7 @@ function QuizPage({ loaderData }: QuizComponentProps) {
   const [attemptsRemaining, setAttemptsRemaining] = useState(2);
   const [questionNumber, setQuestionNumber] = useState(1);
   const [totalQuestions, setTotalQuestions] = useState(5); // Can be made dynamic later
+  const [score, setScore] = useState(0);
 
   // Current level and operation type from loaderData
   const { level, operationType } = loaderData;
@@ -68,6 +69,7 @@ function QuizPage({ loaderData }: QuizComponentProps) {
     }
 
     if (selectedAnswer === currentProblem.correctAnswer) {
+      setScore(score + 1);
       if (questionNumber < totalQuestions) {
         setQuestionNumber(questionNumber + 1);
         // Generate next problem using the level and operationType from loaderData
@@ -76,7 +78,7 @@ function QuizPage({ loaderData }: QuizComponentProps) {
         setSelectedAnswer("");
         // setAttemptsRemaining(2); // Optionally reset attempts for the next question
       } else {
-        navigate("/summary");
+        navigate(`/summary?score=${score + 1}&total=${totalQuestions}`);
       }
     } else {
       setAttemptsRemaining(attemptsRemaining - 1);
@@ -85,7 +87,7 @@ function QuizPage({ loaderData }: QuizComponentProps) {
         alert(
           `Out of attempts! The correct answer was: ${currentProblem.correctAnswer}`
         );
-        navigate("/summary");
+        navigate(`/summary?score=${score}&total=${totalQuestions}`);
       } else {
         alert("Incorrect answer. Try again!");
       }
