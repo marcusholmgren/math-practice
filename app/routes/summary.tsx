@@ -1,16 +1,19 @@
-import React from 'react';
+import { useNavigate } from "react-router";
 
-const SummaryPage: React.FC = () => {
+function SummaryPage() {
+  const navigate = useNavigate();
   const handleCloseSummary = () => {
     console.log("Closing summary");
     // For now, navigate to home or another appropriate page
     // e.g., window.location.href = "/";
+    navigate("/");
   };
 
   const handleContinue = () => {
     console.log("Continuing from summary");
     // For now, navigate to home or another appropriate page
     // e.g., window.location.href = "/";
+    navigate("/");
   };
 
   return (
@@ -61,6 +64,6 @@ const SummaryPage: React.FC = () => {
       </div>
     </div>
   );
-};
+}
 
 export default SummaryPage;

@@ -1,6 +1,10 @@
-import React from 'react';
+import type { Route } from "./+types/home";
 
-const HomePage: React.FC = () => {
+export function clientLoader() {
+  return { name: "React Router" };
+}
+
+function HomePage({ loaderData }: Route.ComponentProps) {
   const startPractice = (mode: string) => {
     console.log(`Starting practice mode: ${mode}`);
     // Navigation logic will be implemented later
@@ -48,29 +52,29 @@ const HomePage: React.FC = () => {
         <div className="flex justify-center">
           <div className="flex flex-1 gap-3 max-w-[480px] flex-col items-stretch px-4 py-3">
             <a
-              href="/quiz?mode=addition"
-              onClick={() => startPractice('addition')}
+              href="/quiz/addition"
+              onClick={() => startPractice("addition")}
               className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-[#0c7ff2] text-white text-base font-bold leading-normal tracking-[0.015em] w-full"
             >
               <span className="truncate">Addition</span>
             </a>
             <a
-              href="/quiz?mode=subtraction"
-              onClick={() => startPractice('subtraction')}
+              href="/quiz/subtraction"
+              onClick={() => startPractice("subtraction")}
               className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-[#0c7ff2] text-white text-base font-bold leading-normal tracking-[0.015em] w-full"
             >
               <span className="truncate">Subtraction</span>
             </a>
             <a
-              href="/quiz?mode=multiplication"
-              onClick={() => startPractice('multiplication')}
+              href="/quiz/multiplication"
+              onClick={() => startPractice("multiplication")}
               className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-[#0c7ff2] text-white text-base font-bold leading-normal tracking-[0.015em] w-full"
             >
               <span className="truncate">Multiplication</span>
             </a>
             <a
-              href="/quiz?mode=division"
-              onClick={() => startPractice('division')}
+              href="/quiz/division"
+              onClick={() => startPractice("division")}
               className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-[#0c7ff2] text-white text-base font-bold leading-normal tracking-[0.015em] w-full"
             >
               <span className="truncate">Division</span>
@@ -81,6 +85,6 @@ const HomePage: React.FC = () => {
       </div>
     </div>
   );
-};
+}
 
 export default HomePage;

@@ -1,6 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import type { Route } from "./+types/quiz";
+import { useNavigate } from "react-router";
 
-const QuizPage: React.FC = () => {
+export async function clientLoader({ params }: Route.LoaderArgs) {
+  console.log(`Mode: ${params.mode}`);
+  return { hej: "marcus" };
+}
+
+function QuizPage({ loaderData }: Route.ComponentProps) {
+  const navigate = useNavigate();
   const [currentQuestion, setCurrentQuestion] = useState("What is 12 + 8?");
   const [options, setOptions] = useState(["18", "20", "22", "24"]);
   const [selectedAnswer, setSelectedAnswer] = useState("");
@@ -15,11 +23,14 @@ const QuizPage: React.FC = () => {
   const handleSubmit = () => {
     console.log("Selected answer:", selectedAnswer);
     // Further logic for checking answer, moving to next question, etc.
+    // redirect to /summary Route
+    navigate("/summary");
   };
 
   const handleCloseQuiz = () => {
     console.log("Closing quiz");
     // Navigate to home or another appropriate page
+    navigate("/");
   };
 
   const progressPercentage = (questionNumber / totalQuestions) * 100;
@@ -68,7 +79,9 @@ const QuizPage: React.FC = () => {
         <h2 className="text-[#111418] tracking-light text-[28px] font-bold leading-tight px-4 text-center pb-3 pt-5">
           {currentQuestion}
         </h2>
-        <div className="flex flex-wrap gap-3 p-4 justify-center"> {/* Added justify-center for better layout */}
+        <div className="flex flex-wrap gap-3 p-4 justify-center">
+          {" "}
+          {/* Added justify-center for better layout */}
           {options.map((option, index) => (
             <label
               key={index}
@@ -103,6 +116,6 @@ const QuizPage: React.FC = () => {
       </div>
     </div>
   );
-};
+}
 
 export default QuizPage;
