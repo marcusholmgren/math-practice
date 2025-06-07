@@ -8,6 +8,7 @@ import {
 } from "react-router";
 
 import type { Route } from "./+types/root";
+import { SettingsProvider } from "./context/SettingsContext";
 import "./app.css";
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -29,7 +30,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
+  return (
+    <SettingsProvider>
+      <Outlet />
+    </SettingsProvider>
+  );
 }
 
 export function HydrateFallback() {

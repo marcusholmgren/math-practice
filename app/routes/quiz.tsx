@@ -5,30 +5,26 @@ import { generateProblem, type Problem } from "../game_engine";
 
 export interface QuizLoaderArgs extends Route.LoaderArgs {
   // Route.LoaderArgs already includes params: { mode: string }
+  // request will be available in clientLoader args
 }
 
-export async function clientLoader({ params }: QuizLoaderArgs) {
-  const operationType = params.mode || "addition"; // Default to level 1 addition
-  //const [level, operationType] = mode.split('-');
-  const level = "1";
+export async function clientLoader({ params, request }: QuizLoaderArgs) {
+  const operationType = params.mode || "addition";
 
-  if (!level || !operationType) {
-    // Handle invalid mode format, perhaps throw an error or default
-    console.error(
-      "Invalid mode format. Expected 'level-operationType'. Defaulting..."
-    );
-    const problem = generateProblem("1", operationType);
-    return { problem, level: "1", operationType: operationType };
-  }
+  const url = new URL(request.url);
+  const difficulty = url.searchParams.get('difficulty') || 'medium'; // Default to 'medium'
 
-  const problem = generateProblem(level, operationType);
-  return { problem, level, operationType };
+  // Validate difficulty if necessary, e.g., ensure it's one of 'easy', 'medium', 'hard'
+  // For now, we'll assume it's valid or default.
+
+  const problem = generateProblem(difficulty, operationType);
+  return { problem, difficulty, operationType };
 }
 
 export interface QuizComponentProps extends Route.ComponentProps {
   loaderData: {
     problem: Problem;
-    level: string;
+    difficulty: string;
     operationType: string;
   };
 }
@@ -49,7 +45,7 @@ function QuizPage({ loaderData }: QuizComponentProps) {
   const [score, setScore] = useState(0);
 
   // Current level and operation type from loaderData
-  const { level, operationType } = loaderData;
+  const { difficulty, operationType } = loaderData;
 
   useEffect(() => {
     setCurrentProblem(loaderData.problem);
@@ -73,7 +69,7 @@ function QuizPage({ loaderData }: QuizComponentProps) {
       if (questionNumber < totalQuestions) {
         setQuestionNumber(questionNumber + 1);
         // Generate next problem using the level and operationType from loaderData
-        const nextProblem = generateProblem(level, operationType);
+        const nextProblem = generateProblem(difficulty, operationType);
         setCurrentProblem(nextProblem);
         setSelectedAnswer("");
         // setAttemptsRemaining(2); // Optionally reset attempts for the next question
@@ -129,7 +125,7 @@ function QuizPage({ loaderData }: QuizComponentProps) {
             </svg>
           </button>
           <h2 className="text-[#111418] text-lg font-bold capitalize leading-tight tracking-[-0.015em] flex-1 text-center pr-12">
-            Math Quiz - Level {level} ({operationType})
+            Math Quiz - {difficulty.charAt(0).toUpperCase() + difficulty.slice(1)} ({operationType})
           </h2>
         </div>
         <div className="flex flex-col gap-3 p-4">
