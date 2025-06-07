@@ -1,4 +1,3 @@
-import React from 'react';
 import { useSettings } from '../context/SettingsContext';
 
 interface SettingsModalProps {
@@ -12,7 +11,7 @@ const difficultyLevels = [
   { id: 'hard', name: 'Hard' },
 ];
 
-export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
+export const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
   const { difficulty, setDifficulty } = useSettings();
 
   if (!isOpen) {

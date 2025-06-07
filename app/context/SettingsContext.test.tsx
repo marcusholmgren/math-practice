@@ -1,10 +1,9 @@
-import React from 'react';
 import { render, screen, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { SettingsProvider, useSettings } from './SettingsContext';
 
 // Mock component to use the context
-const TestConsumerComponent: React.FC = () => {
+const TestConsumerComponent = () => {
   const { difficulty, setDifficulty } = useSettings();
   return (
     <div>
@@ -42,10 +41,10 @@ describe('SettingsContext', () => {
   it('throws an error if useSettings is used outside of SettingsProvider', () => {
     // Suppress console.error for this test as React will log an error
     const originalError = console.error;
-    console.error = jest.fn();
+    console.error = vi.fn();
 
     let errorThrown = false;
-    const ErrorBoundaryComponent: React.FC = () => {
+    const ErrorBoundaryComponent = () => {
       try {
         useSettings();
       } catch (e) {
