@@ -1,31 +1,40 @@
 import React, { useState, useEffect } from "react";
 import type { Route } from "./+types/quiz";
 import { useNavigate, useParams } from "react-router";
-import { generateProblem, type Problem } from "../game_engine"; // Import Problem type and function
+import { generateProblem, type Problem } from "../game_engine";
 
-// Update LoaderArgs to reflect that it will return a Problem
 export interface QuizLoaderArgs extends Route.LoaderArgs {
-  // Add any specific loader args if needed, otherwise, it inherits from Route.LoaderArgs
+  // Route.LoaderArgs already includes params: { mode: string }
 }
 
-// Update clientLoader to use generateProblem and return a Problem
 export async function clientLoader({ params }: QuizLoaderArgs) {
-  const mode = params.mode || "1"; // Default to level 1 if mode is not specified
-  const problem = generateProblem(mode);
-  return { problem, mode }; // Return the problem object and mode
+  const mode = params.mode || "1-addition"; // Default to level 1 addition
+  const [level, operationType] = mode.split('-');
+
+  if (!level || !operationType) {
+    // Handle invalid mode format, perhaps throw an error or default
+    console.error("Invalid mode format. Expected 'level-operationType'. Defaulting...");
+    const problem = generateProblem("1", "addition");
+    return { problem, level: "1", operationType: "addition" };
+  }
+
+  const problem = generateProblem(level, operationType);
+  return { problem, level, operationType };
 }
 
-// Update ComponentProps to expect a 'problem' object and 'mode'
 export interface QuizComponentProps extends Route.ComponentProps {
   loaderData: {
     problem: Problem;
-    mode: string;
+    level: string;
+    operationType: string;
   };
 }
 
 function QuizPage({ loaderData }: QuizComponentProps) {
   const navigate = useNavigate();
-  const { mode: routeMode } = useParams<{ mode: string }>(); // Get mode from route params for fetching new questions
+  // useParams can be used if we need to access parts of the path directly,
+  // but loaderData should provide what we need (level, operationType)
+  // const { mode: routeMode } = useParams<{ mode: string }>();
 
   const [currentProblem, setCurrentProblem] = useState<Problem>(loaderData.problem);
   const [selectedAnswer, setSelectedAnswer] = useState<string>("");
@@ -33,10 +42,14 @@ function QuizPage({ loaderData }: QuizComponentProps) {
   const [questionNumber, setQuestionNumber] = useState(1);
   const [totalQuestions, setTotalQuestions] = useState(5); // Can be made dynamic later
 
-  // Effect to update state if loaderData changes (e.g., on navigation or HMR)
+  // Current level and operation type from loaderData
+  const { level, operationType } = loaderData;
+
   useEffect(() => {
     setCurrentProblem(loaderData.problem);
-    // Reset attempts for a new problem if needed, or manage globally
+    // Reset attempts or other states when a new problem is loaded via loader
+    // setAttemptsRemaining(2); // Example: Reset attempts for each new problem from loader
+    // setQuestionNumber(1); // Might be needed if the loader is re-run for a new quiz type
   }, [loaderData.problem]);
 
   const handleAnswerChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,21 +65,19 @@ function QuizPage({ loaderData }: QuizComponentProps) {
     if (selectedAnswer === currentProblem.correctAnswer) {
       if (questionNumber < totalQuestions) {
         setQuestionNumber(questionNumber + 1);
-        const nextProblem = generateProblem(routeMode || "1"); // Use routeMode
+        // Generate next problem using the level and operationType from loaderData
+        const nextProblem = generateProblem(level, operationType);
         setCurrentProblem(nextProblem);
         setSelectedAnswer("");
-        // Reset attempts for next question if desired
-        // setAttemptsRemaining(2);
+        // setAttemptsRemaining(2); // Optionally reset attempts for the next question
       } else {
-        // Last question answered correctly
-        navigate("/summary"); // Or pass some state like { score: ... }
+        navigate("/summary");
       }
     } else {
       setAttemptsRemaining(attemptsRemaining - 1);
-      if (attemptsRemaining - 1 <= 0) {
-        // Out of attempts
+      if (attemptsRemaining - 1 < 0) { // Check if attempts will be less than 0
         alert(`Out of attempts! The correct answer was: ${currentProblem.correctAnswer}`);
-        navigate("/summary"); // Or some other logic
+        navigate("/summary");
       } else {
         alert("Incorrect answer. Try again!");
       }
@@ -104,7 +115,7 @@ function QuizPage({ loaderData }: QuizComponentProps) {
             </svg>
           </button>
           <h2 className="text-[#111418] text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center pr-12">
-            Math Quiz - Level {routeMode}
+            Math Quiz - Level {level} ({operationType})
           </h2>
         </div>
         <div className="flex flex-col gap-3 p-4">
@@ -150,7 +161,7 @@ function QuizPage({ loaderData }: QuizComponentProps) {
           <button
             onClick={handleSubmit}
             className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 flex-1 bg-[#0c7ff2] text-white text-sm font-bold leading-normal tracking-[0.015em]"
-            disabled={!selectedAnswer} // Disable button if no answer is selected
+            disabled={!selectedAnswer}
           >
             <span className="truncate">Submit</span>
           </button>
