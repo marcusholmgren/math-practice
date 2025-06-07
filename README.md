@@ -1,11 +1,7 @@
 # Math Practice
 
+[![Build, Test, and Deploy](https://github.com/marcusholmgren/math-practice/actions/workflows/ci.yml/badge.svg)](https://github.com/marcusholmgren/math-practice/actions/workflows/ci.yml)
 
-
-HTML design
-1. index.html -- landing page for starting a new practic session
-2. quiz.html -- ongoing practice session, 10 questions
-3. summary.html -- show summary on valid answered questions
 
 ## Getting Started
 

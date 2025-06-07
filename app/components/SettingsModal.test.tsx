@@ -1,16 +1,15 @@
-import React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { SettingsModal } from './SettingsModal';
 import { SettingsProvider, useSettings } from '../context/SettingsContext'; // Context needed for the modal
 
 // Mock props for the modal
-const mockOnClose = jest.fn();
+const mockOnClose = vi.fn();
 
 // Helper component to wrap Modal in Provider and allow inspecting context
-const TestModalContainer: React.FC<{ initialDifficulty?: string }> = ({ initialDifficulty }) => {
+const TestModalContainer = ({ initialDifficulty }: { initialDifficulty?: string }) => {
   // This inner component is needed because useSettings must be called by a child of SettingsProvider
-  const ModalWithContextAccess: React.FC = () => {
+  const ModalWithContextAccess = () => {
     const { difficulty } = useSettings();
     return (
       <>
@@ -38,6 +37,7 @@ describe('SettingsModal', () => {
   beforeEach(() => {
     // Reset mocks before each test
     mockOnClose.mockClear();
+    vi.restoreAllMocks();
   });
 
   it('renders correctly when open', () => {
