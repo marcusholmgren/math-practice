@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import type { Route } from "./+types/quiz";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate } from "react-router";
 import { generateProblem, type Problem } from "../game_engine";
 
 export interface QuizLoaderArgs extends Route.LoaderArgs {
@@ -78,7 +78,9 @@ function QuizPage({ loaderData }: QuizComponentProps) {
         setSelectedAnswer("");
         // setAttemptsRemaining(2); // Optionally reset attempts for the next question
       } else {
-        navigate(`/summary?score=${score + 1}&total=${totalQuestions}`);
+        navigate(`/summary?score=${score + 1}&total=${totalQuestions}`, {
+          viewTransition: true,
+        });
       }
     } else {
       setAttemptsRemaining(attemptsRemaining - 1);
@@ -87,7 +89,9 @@ function QuizPage({ loaderData }: QuizComponentProps) {
         alert(
           `Out of attempts! The correct answer was: ${currentProblem.correctAnswer}`
         );
-        navigate(`/summary?score=${score}&total=${totalQuestions}`);
+        navigate(`/summary?score=${score}&total=${totalQuestions}`, {
+          viewTransition: true,
+        });
       } else {
         alert("Incorrect answer. Try again!");
       }
@@ -95,7 +99,7 @@ function QuizPage({ loaderData }: QuizComponentProps) {
   };
 
   const handleCloseQuiz = () => {
-    navigate("/");
+    navigate("/", { viewTransition: true });
   };
 
   const progressPercentage = (questionNumber / totalQuestions) * 100;

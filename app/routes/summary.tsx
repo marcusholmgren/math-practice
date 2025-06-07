@@ -1,14 +1,17 @@
-import { useNavigate } from "react-router";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router";
 import ReactConfetti from "react-confetti";
-import { useWindowSize } from "use-window-size";
+import { useWindowSize } from "react-use";
 import { useState, useEffect } from "react";
 
+export async function clientLoader() {
+  return {}; // Loader no longer needs to handle query params
+}
+
 function SummaryPage() {
-  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const score = searchParams.get("score") || "0";
-  const total = searchParams.get("total") || "0";
+  const score = parseInt(searchParams.get("score") || "0", 10);
+  const total = parseInt(searchParams.get("total") || "0", 10);
+  const navigate = useNavigate();
   const { width, height } = useWindowSize();
   const [showConfetti, setShowConfetti] = useState(true);
 
@@ -23,14 +26,14 @@ function SummaryPage() {
     console.log("Closing summary");
     // For now, navigate to home or another appropriate page
     // e.g., window.location.href = "/";
-    navigate("/");
+    navigate("/", { viewTransition: true });
   };
 
   const handleContinue = () => {
     console.log("Continuing from summary");
     // For now, navigate to home or another appropriate page
     // e.g., window.location.href = "/";
-    navigate("/");
+    navigate("/", { viewTransition: true });
   };
 
   return (

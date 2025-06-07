@@ -1,4 +1,5 @@
 import type { Route } from "./+types/home";
+import { NavLink } from "react-router";
 
 export function clientLoader() {
   return { name: "React Router" };
@@ -51,34 +52,38 @@ function HomePage({ loaderData }: Route.ComponentProps) {
       <div>
         <div className="flex justify-center">
           <div className="flex flex-1 gap-3 max-w-[480px] flex-col items-stretch px-4 py-3">
-            <a
-              href="/quiz/addition"
+            <NavLink
+              to="/quiz/addition"
               onClick={() => startPractice("addition")}
               className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-[#0c7ff2] text-white text-base font-bold leading-normal tracking-[0.015em] w-full"
+              viewTransition
             >
               <span className="truncate">Addition</span>
-            </a>
-            <a
-              href="/quiz/subtraction"
+            </NavLink>
+            <NavLink
+              to="/quiz/subtraction"
               onClick={() => startPractice("subtraction")}
               className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-[#0c7ff2] text-white text-base font-bold leading-normal tracking-[0.015em] w-full"
+              viewTransition
             >
               <span className="truncate">Subtraction</span>
-            </a>
-            <a
-              href="/quiz/multiplication"
+            </NavLink>
+            <NavLink
+              to="/quiz/multiplication"
               onClick={() => startPractice("multiplication")}
               className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-[#0c7ff2] text-white text-base font-bold leading-normal tracking-[0.015em] w-full"
+              viewTransition
             >
               <span className="truncate">Multiplication</span>
-            </a>
-            <a
-              href="/quiz/division"
+            </NavLink>
+            <NavLink
+              to="/quiz/division"
               onClick={() => startPractice("division")}
               className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-[#0c7ff2] text-white text-base font-bold leading-normal tracking-[0.015em] w-full"
+              viewTransition
             >
               <span className="truncate">Division</span>
-            </a>
+            </NavLink>
           </div>
         </div>
         <div className="h-5 bg-white"></div>
