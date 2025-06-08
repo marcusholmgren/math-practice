@@ -19,6 +19,20 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
+        {/* This script handles redirects from the 404.html page */}
+        <script dangerouslySetInnerHTML={{ __html: `
+          (function() {
+            // Check if we have a redirect path stored
+            const redirectPath = sessionStorage.getItem('redirectPath');
+            if (redirectPath) {
+              // Remove it from sessionStorage to prevent infinite loops
+              sessionStorage.removeItem('redirectPath');
+              
+              // Use history API to navigate to the correct route without a page refresh
+              window.history.replaceState(null, null, redirectPath);
+            }
+          })();
+        `}} />
       </head>
       <body>
         {children}

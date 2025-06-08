@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Redirecting...</title>
+    <script>
+      // This script takes the current URL path and converts it to
+      // a path that will be correctly processed by React Router
+      const path = window.location.pathname.replace(/^\/math-practice/, "");
+      const query = window.location.search;
+      const url = path + query;
+
+      // Store the URL in sessionStorage
+      sessionStorage.setItem("redirectPath", url);
+
+      // Redirect to the homepage
+      const homeUrl = window.location.origin + "/math-practice/";
+      window.location.replace(homeUrl);
+    </script>
+  </head>
+  <body>
+    <p>Redirecting to the application...</p>
+  </body>
+</html>
