@@ -12,7 +12,7 @@ export async function clientLoader({ params, request }: QuizLoaderArgs) {
   const operationType = params.mode || "addition";
 
   const url = new URL(request.url);
-  const difficulty = url.searchParams.get('difficulty') || 'medium'; // Default to 'medium'
+  const difficulty = url.searchParams.get("difficulty") || "medium"; // Default to 'medium'
 
   // Validate difficulty if necessary, e.g., ensure it's one of 'easy', 'medium', 'hard'
   // For now, we'll assume it's valid or default.
@@ -102,32 +102,38 @@ function QuizPage({ loaderData }: QuizComponentProps) {
 
   return (
     <div
-      className="relative flex size-full min-h-screen flex-col bg-white justify-between group/design-root overflow-x-hidden"
+      className="relative flex size-full min-h-[100dvh] flex-col bg-white group/design-root overflow-x-auto"
       style={{
         fontFamily: '"Space Grotesk", "Noto Sans", sans-serif',
       }}
     >
-      <div>
-        <div className="flex items-center bg-white p-4 pb-2 justify-between">
-          <button
-            onClick={handleCloseQuiz}
-            className="text-[#111418] flex size-12 shrink-0 items-center justify-center"
-            aria-label="Close quiz"
+      {/* Header */}
+      <div className="flex items-center bg-white p-4 pb-2 justify-between">
+        <button
+          onClick={handleCloseQuiz}
+          className="text-[#111418] flex size-12 shrink-0 items-center justify-center"
+          aria-label="Close quiz"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24px"
+            height="24px"
+            fill="currentColor"
+            viewBox="0 0 256 256"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24px"
-              height="24px"
-              fill="currentColor"
-              viewBox="0 0 256 256"
-            >
-              <path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path>
-            </svg>
-          </button>
-          <h2 className="text-[#111418] text-lg font-bold capitalize leading-tight tracking-[-0.015em] flex-1 text-center pr-12">
-            Math Quiz - {difficulty.charAt(0).toUpperCase() + difficulty.slice(1)} ({operationType})
-          </h2>
-        </div>
+            <path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path>
+          </svg>
+        </button>
+        <h2 className="text-[#111418] text-lg font-bold capitalize leading-tight tracking-[-0.015em] flex-1 text-center pr-12">
+          Math Quiz -{" "}
+          {difficulty.charAt(0).toUpperCase() + difficulty.slice(1)} (
+          {operationType})
+        </h2>
+      </div>
+      
+      {/* Main content container */}
+      <div className="flex flex-col flex-1">
+        {/* Progress indicator */}
         <div className="flex flex-col gap-3 p-4">
           <div className="flex gap-6 justify-between">
             <p className="text-[#111418] text-base font-medium leading-normal">
@@ -141,9 +147,13 @@ function QuizPage({ loaderData }: QuizComponentProps) {
             ></div>
           </div>
         </div>
-        <h2 className="text-[#111418] tracking-light text-[28px] font-bold leading-tight px-4 text-center pb-3 pt-5">
+        
+        {/* Question */}
+        <h2 className="text-[#111418] tracking-light text-[28px] font-bold leading-tight px-4 text-center pb-3 pt-2">
           {currentProblem.question}
         </h2>
+        
+        {/* Answer options */}
         <div className="flex flex-wrap gap-3 p-4 justify-center">
           {currentProblem.options.map((option, index) => (
             <label
@@ -162,11 +172,18 @@ function QuizPage({ loaderData }: QuizComponentProps) {
             </label>
           ))}
         </div>
-        <p className="text-[#60758a] text-sm font-normal leading-normal pb-3 pt-1 px-4 text-center">
+        
+        {/* Attempts remaining */}
+        <p className="text-[#60758a] text-sm font-normal leading-normal px-4 text-center mt-1">
           Attempts remaining: {attemptsRemaining}
         </p>
+        
+        {/* Spacer that grows to push the button to the bottom */}
+        <div className="flex-1"></div>
       </div>
-      <div>
+
+      {/* Footer with button */}
+      <div className="mt-auto">
         <div className="flex px-4 py-3">
           <button
             onClick={handleSubmit}
@@ -176,7 +193,7 @@ function QuizPage({ loaderData }: QuizComponentProps) {
             <span className="truncate">Submit</span>
           </button>
         </div>
-        <div className="h-5 bg-white"></div>
+        <div className="h-[env(safe-area-inset-bottom,5px)] bg-white"></div>
       </div>
     </div>
   );

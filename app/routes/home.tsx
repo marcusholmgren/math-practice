@@ -1,8 +1,8 @@
 import type { Route } from "./+types/home";
 import { NavLink } from "react-router";
-import { useState } from 'react';
-import { SettingsModal } from '../components/SettingsModal';
-import { useSettings } from '../context/SettingsContext';
+import { useState } from "react";
+import { SettingsModal } from "../components/SettingsModal";
+import { useSettings } from "../context/SettingsContext";
 
 export function clientLoader() {
   return { name: "React Router" };
@@ -17,13 +17,15 @@ function HomePage({ loaderData }: Route.ComponentProps) {
   };
 
   const startPractice = (mode: string) => {
-    console.log(`Starting practice mode: ${mode} with difficulty: ${difficulty}`);
+    console.log(
+      `Starting practice mode: ${mode} with difficulty: ${difficulty}`
+    );
     // Navigation logic will be handled by NavLink
   };
 
   return (
     <div
-      className="relative flex size-full min-h-screen flex-col bg-white justify-between group/design-root overflow-x-hidden"
+      className="relative flex size-full min-h-[100dvh] flex-col bg-white justify-between group/design-root overflow-x-auto"
       style={{
         fontFamily: '"Space Grotesk", "Noto Sans", sans-serif',
       }}
@@ -62,7 +64,7 @@ function HomePage({ loaderData }: Route.ComponentProps) {
           Choose a practice mode
         </h2>
       </div>
-      <div>
+      <div className="flex-1 flex flex-col justify-center">
         <div className="flex justify-center">
           <div className="flex flex-1 gap-3 max-w-[480px] flex-col items-stretch px-4 py-3">
             <NavLink
@@ -99,9 +101,12 @@ function HomePage({ loaderData }: Route.ComponentProps) {
             </NavLink>
           </div>
         </div>
-        <div className="h-5 bg-white"></div>
+        <div className="h-[env(safe-area-inset-bottom,5px)] bg-white"></div>
       </div>
-      <SettingsModal isOpen={isSettingsModalOpen} onClose={toggleSettingsModal} />
+      <SettingsModal
+        isOpen={isSettingsModalOpen}
+        onClose={toggleSettingsModal}
+      />
     </div>
   );
 }
