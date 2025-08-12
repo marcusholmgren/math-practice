@@ -13,14 +13,18 @@ function SummaryPage() {
   const total = parseInt(searchParams.get("total") || "0", 10);
   const navigate = useNavigate();
   const { width, height } = useWindowSize();
-  const [showConfetti, setShowConfetti] = useState(true);
+  const [showConfetti, setShowConfetti] = useState(
+    total > 0 && score / total >= 0.8
+  );
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowConfetti(false);
-    }, 5000); // Stop confetti after 5 seconds
-    return () => clearTimeout(timer);
-  }, []);
+    if (showConfetti) {
+      const timer = setTimeout(() => {
+        setShowConfetti(false);
+      }, 5000); // Stop confetti after 5 seconds
+      return () => clearTimeout(timer);
+    }
+  }, [showConfetti]);
 
   const handleCloseSummary = () => {
     console.log("Closing summary");
@@ -76,7 +80,9 @@ function SummaryPage() {
           You got {score} out of {total} correct
         </h2>
         <p className="text-[#111418] text-base font-normal leading-normal pb-3 pt-1 px-4 text-center">
-          You're doing great! Keep practicing to improve your math skills.
+          {total > 0 && score / total >= 0.8
+            ? "Congratulations! You're a math wizard!"
+            : "You're doing great! Keep practicing to improve your math skills."}
         </p>
         
         {/* Spacer that pushes button to bottom */}
